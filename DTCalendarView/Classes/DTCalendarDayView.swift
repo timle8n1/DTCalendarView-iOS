@@ -22,6 +22,7 @@ class DTCalendarDayView: UIView {
     var rangeSelection: CalendarRangeSelection = .outSelection
     var dayOfMonth: Int = 1
     var isPreview = false
+    var isDisabled = false
     var previewDaysInPreviousAndMonth = true
     
     var representedDate = Date()
@@ -138,6 +139,13 @@ class DTCalendarDayView: UIView {
             dayLabel.font = weekDisplayAttributes.normalDisplayAttributes.font
             dayLabel.textColor = weekDisplayAttributes.normalDisplayAttributes.textColor
             dayLabel.textAlignment = weekDisplayAttributes.normalDisplayAttributes.textAlignment
+        }
+        
+        if rangeSelection == .outSelection && isDisabled {
+            dayLabel.font = weekDisplayAttributes.disabledDisplayAttributes.font
+            dayLabel.textColor = weekDisplayAttributes.disabledDisplayAttributes.textColor
+            dayLabel.textAlignment = weekDisplayAttributes.disabledDisplayAttributes.textAlignment
+            backgroundColor = weekDisplayAttributes.disabledDisplayAttributes.backgroundColor
         }
         
         if rangeSelection == .outSelection && isPreview {

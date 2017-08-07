@@ -11,6 +11,10 @@ import DTCalendarView
 
 class ViewController: UIViewController {
     
+    fileprivate let now = Date()
+    
+    fileprivate let calendar = Calendar.current
+    
     @IBOutlet private var calendarView: DTCalendarView! {
         didSet {
             calendarView.delegate = self
@@ -40,11 +44,30 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    fileprivate func currentDate(matchesMonthAndYearOf date: Date) -> Bool {
+        let nowMonth = calendar.component(.month, from: now)
+        let nowYear = calendar.component(.year, from: now)
+        
+        let askMonth = calendar.component(.month, from: date)
+        let askYear = calendar.component(.year, from: date)
+        
+        if nowMonth == askMonth && nowYear == askYear {
+            return true
+        }
+        
+        return false
+    }
 }
 
 extension ViewController: DTCalendarViewDelegate {
     
     func calendarView(_ calendarView: DTCalendarView, dragFromDate fromDate: Date, toDate: Date) {
+        
+        if let nowDayOfYear = calendar.ordinality(of: .day, in: .year, for: now),
+            let selectDayOfYear = calendar.ordinality(of :.day, in: .year, for: toDate),
+            selectDayOfYear <= nowDayOfYear {
+            return
+        }
         
         if let startDate = calendarView.selectionStartDate,
             fromDate == startDate {
@@ -55,7 +78,7 @@ extension ViewController: DTCalendarViewDelegate {
                 }
             } else {
                 calendarView.selectionStartDate = toDate
-                }
+            }
             
         } else if let endDate = calendarView.selectionEndDate,
             fromDate == endDate {
@@ -63,7 +86,7 @@ extension ViewController: DTCalendarViewDelegate {
             if let startDate = calendarView.selectionStartDate {
                 if toDate > startDate {
                     calendarView.selectionEndDate = toDate
-                    }
+                }
             } else {
                 calendarView.selectionEndDate = toDate
             }
@@ -81,7 +104,30 @@ extension ViewController: DTCalendarViewDelegate {
         return label
     }
     
+    func calendarView(_ calendarView: DTCalendarView, disabledDaysInMonth month: Date) -> [Int]? {
+        
+        if currentDate(matchesMonthAndYearOf: month) {
+            var disabledDays = [Int]()
+            
+            let nowDay = calendar.component(.day, from: now)
+            
+            for day in 1 ... nowDay {
+                disabledDays.append(day)
+            }
+                
+            return disabledDays
+        }
+        
+        return nil
+    }
+    
     func calendarView(_ calendarView: DTCalendarView, didSelectDate date: Date) {
+        
+        if let nowDayOfYear = calendar.ordinality(of: .day, in: .year, for: now),
+            let selectDayOfYear = calendar.ordinality(of :.day, in: .year, for: date),
+            selectDayOfYear <= nowDayOfYear {
+            return
+        }
         
         if calendarView.selectionStartDate == nil {
             calendarView.selectionStartDate = date

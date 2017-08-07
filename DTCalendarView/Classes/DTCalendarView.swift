@@ -17,12 +17,26 @@ public protocol DTCalendarViewDelegate: class {
      
      - parameter calendarView: The calendar view requesting the view
      
-     - parameter month: A date representing the month/year the view should represent, othe Date data should be ignored - like the particular day
+     - parameter month: A date representing the month/year the view should represent, other Date data should be ignored - like the particular day
      
      - returns: A view representing the month/year to be displayed above the calendar. It will be sized to fill the available space
      
     */
     func calendarView(_ calendarView: DTCalendarView, viewForMonth month: Date) -> UIView
+    
+    /**
+     Asks your delegate for an array of days that should appear disabled to the user. The logic of selection of these dates is still up to your
+     app to enforce, so you can decide what happens if someone attempts to select a range including a disabled date, etc
+     
+     - parameter calendarView: The calendar view requesting the disabled dates
+     
+     - parameter month: A date representing the month/year the array should represent, other Date data should be ignored - like the particular day
+     
+     - returns: An representing the days to be displayed as disabled by the calendar. This array should be a list of the days of the month to disable (1, 5, 7...)
+     
+     */
+    func calendarView(_ calendarView: DTCalendarView, disabledDaysInMonth month: Date) -> [Int]?
+    
     
     /**
      Notifies your delegate that a user dragged a selected date to another day on the calendar. The date could be the selected start day or end day,
@@ -117,6 +131,9 @@ public enum DayState {
     /// In between the current start and end dates
     case highlighted
     
+    /// Non-selectable state
+    case disabled
+    
     /// A day from a previous or next month displayed in the current month view
     case preview
 }
@@ -125,6 +142,7 @@ struct WeekDisplayAttributes {
     let normalDisplayAttributes: DisplayAttributes
     let selectedDisplayAttributes: DisplayAttributes
     let highlightedDisplayAttributes: DisplayAttributes
+    let disabledDisplayAttributes: DisplayAttributes
     let previewDisplayAttributes: DisplayAttributes
 }
 
@@ -209,6 +227,10 @@ public class DTCalendarView: UIView {
                                                                                                               textColor: .black,
                                                                                                               backgroundColor: .lightGray,
                                                                                                               textAlignment: .center),
+                                                              disabledDisplayAttributes: DisplayAttributes(font: UIFont.systemFont(ofSize: 15),
+                                                                                                           textColor: UIColor.black.withAlphaComponent(0.5),
+                                                                                                           backgroundColor: .white,
+                                                                                                           textAlignment: .center),
                                                               previewDisplayAttributes: DisplayAttributes(font: UIFont.systemFont(ofSize: 15),
                                                                                                           textColor: UIColor.black.withAlphaComponent(0.5),
                                                                                                           backgroundColor: .white,
@@ -327,6 +349,7 @@ public class DTCalendarView: UIView {
         var normalDisplayAttributes = weekDisplayAttributes.normalDisplayAttributes
         var selectedDisplayAttributes = weekDisplayAttributes.selectedDisplayAttributes
         var highlightedDisplayAttributes = weekDisplayAttributes.highlightedDisplayAttributes
+        var disabledDisplayAttributes = weekDisplayAttributes.disabledDisplayAttributes
         var previewDisplayAttributes = weekDisplayAttributes.previewDisplayAttributes
         
         switch state {
@@ -337,6 +360,8 @@ public class DTCalendarView: UIView {
             selectedDisplayAttributes = displayAttributes
         case .highlighted:
             highlightedDisplayAttributes = displayAttributes
+        case .disabled:
+            disabledDisplayAttributes = displayAttributes
         case .preview:
             previewDisplayAttributes = displayAttributes
         }
@@ -344,6 +369,7 @@ public class DTCalendarView: UIView {
         weekDisplayAttributes = WeekDisplayAttributes(normalDisplayAttributes: normalDisplayAttributes,
                                                       selectedDisplayAttributes: selectedDisplayAttributes,
                                                       highlightedDisplayAttributes: highlightedDisplayAttributes,
+                                                      disabledDisplayAttributes: disabledDisplayAttributes,
                                                       previewDisplayAttributes: previewDisplayAttributes)
         
         setNeedsUpdate()
@@ -553,6 +579,8 @@ extension DTCalendarView: UICollectionViewDataSource {
                 weekViewCell.displayMonth = date
                 weekViewCell.displayWeek = displayWeek
                 weekViewCell.previewDaysInPreviousAndMonth = previewDaysInPreviousAndMonth
+                
+                weekViewCell.disabledDays = delegate?.calendarView(self, disabledDaysInMonth: date)
                 
                 weekViewCell.updateCalendarLabels(weekDisplayAttributes: weekDisplayAttributes)
             }

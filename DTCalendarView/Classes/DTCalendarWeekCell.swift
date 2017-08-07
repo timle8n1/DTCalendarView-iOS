@@ -22,6 +22,8 @@ class DTCalendarWeekCell: UICollectionViewCell {
     var selectionStartDate: Date?
     var selectionEndDate: Date?
     
+    var disabledDays: [Int]?
+    
     var previewDaysInPreviousAndMonth = true
     
     weak var delegate: DTCalendarWeekCellDelegate?
@@ -166,6 +168,12 @@ class DTCalendarWeekCell: UICollectionViewCell {
                         
                         let currentDay = indexWithOffset - weekday + 2
                         dayView.dayOfMonth = currentDay
+                        
+                        if let disabledDays = disabledDays {
+                            dayView.isDisabled = disabledDays.contains(currentDay)
+                        } else {
+                            dayView.isDisabled = false
+                        }
                         
                         if let currentDate = calendar.date(bySetting: .day, value: currentDay, of: firstDayOfMonth) {
                             let startCurrentDate = calendar.startOfDay(for: currentDate)
