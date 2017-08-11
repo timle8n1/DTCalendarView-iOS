@@ -46,6 +46,12 @@ class ViewController: UIViewController {
         calendarView.selectionStartDate = now
         calendarView.selectionEndDate = now.addingTimeInterval(60 * 60 * 24 * 5)
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        calendarView.scrollTo(month: calendarView.displayEndDate, animated: false)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -376,6 +376,24 @@ public class DTCalendarView: UIView {
     }
     
     /**
+     Scrolls the calendar view such that the month represented by given date is at the top of the view
+    
+     - parameter month: The date to get the month/year from (day is ignored)
+     */
+    public func scrollTo(month: Date, animated: Bool) {
+        
+        //Can't scroll outside the represented range
+        guard month >= displayStartDate, month <= displayEndDate else { return }
+        
+        let calendar = Calendar.current
+        let months = calendar.dateComponents([.month], from: displayStartDate, to: month).month ?? 0
+        
+        let indexPath = IndexPath(item: 0, section: months)
+        
+        collectionView.scrollToItem(at: indexPath, at: .top, animated: animated)
+    }
+    
+    /**
      The text to use for the weekday labels
      
      -parameters labels: An array with the text labels, this must be an array with 7 values in order Sun-Sat
