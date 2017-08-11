@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.9.1] - 2017-08-11
+### Fixed
+- Issue scrolling to a given month after setting selected start date or end date
+
 ## [0.9.0] - 2017-08-11
 ### Adds
 - Adds a function to scroll to a particular month in the calendar view
