@@ -390,7 +390,14 @@ public class DTCalendarView: UIView {
         
         let indexPath = IndexPath(item: 0, section: months)
         
-        collectionView.scrollToItem(at: indexPath, at: .top, animated: animated)
+        //If the user has set something that requires a dispatch update
+        //Wait until after the dispatch update completes to scroll
+        if needsUpdate {
+            indexPathToScrollToAfterUpdate = indexPath
+            animateScrollAfterUpdate = animated
+        } else {
+            collectionView.scrollToItem(at: indexPath, at: .top, animated: animated)
+        }
     }
     
     /**
@@ -481,12 +488,20 @@ public class DTCalendarView: UIView {
     }
     
     private var needsUpdate = false
+    private var indexPathToScrollToAfterUpdate: IndexPath?
+    private var animateScrollAfterUpdate = false
     private func setNeedsUpdate() {
         if !needsUpdate {
             needsUpdate = true
             DispatchQueue.main.async { [weak self] in
                 self?.needsUpdate = false
                 self?.reloadVisibleCells()
+                
+                // If something changed that required an update dispatch we wait to scroll until after the update has been applied
+                if let indexPath = self?.indexPathToScrollToAfterUpdate {
+                    self?.collectionView.scrollToItem(at: indexPath, at: .top, animated: self?.animateScrollAfterUpdate ?? false)
+                    self?.indexPathToScrollToAfterUpdate = nil
+                }
             }
         }
     }

@@ -45,12 +45,12 @@ class ViewController: UIViewController {
         
         calendarView.selectionStartDate = now
         calendarView.selectionEndDate = now.addingTimeInterval(60 * 60 * 24 * 5)
+        
+        calendarView.scrollTo(month: calendarView.displayEndDate, animated: false)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        calendarView.scrollTo(month: calendarView.displayEndDate, animated: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -139,6 +139,7 @@ extension ViewController: DTCalendarViewDelegate {
         
         if let nowDayOfYear = calendar.ordinality(of: .day, in: .year, for: now),
             let selectDayOfYear = calendar.ordinality(of :.day, in: .year, for: date),
+            calendar.component(.year, from: now) == calendar.component(.year, from: date),
             selectDayOfYear <= nowDayOfYear {
             return
         }
