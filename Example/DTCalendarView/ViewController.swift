@@ -38,6 +38,14 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        let now = Date()
+        
+        calendarView.selectionStartDate = now
+        calendarView.selectionEndDate = now.addingTimeInterval(60 * 60 * 24 * 5)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

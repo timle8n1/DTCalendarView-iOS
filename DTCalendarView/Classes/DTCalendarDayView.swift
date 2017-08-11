@@ -77,6 +77,22 @@ class DTCalendarDayView: UIView {
         let hightLightFrame = dayLabel.frame.insetBy(dx: 0, dy: height > width ? (height - width) / 2 : 0)
         highLightLayer.frame = hightLightFrame
         
+        switch rangeSelection {
+        case .startSelection:
+            highLightLayer.path = CGPath(rect: CGRect(x: highLightLayer.bounds.midX, y: 0,
+                                                      width: highLightLayer.bounds.width / 2, height: highLightLayer.bounds.height), transform: nil)
+        case .endSelection:
+            highLightLayer.path = CGPath(rect: CGRect(x: 0, y: 0,
+                                                      width: highLightLayer.bounds.width / 2, height: highLightLayer.bounds.height), transform: nil)
+            
+        case .inSelection:
+            highLightLayer.path = CGPath(rect: CGRect(x: 0, y: 0,
+                                                      width: highLightLayer.bounds.width, height: highLightLayer.bounds.height), transform: nil)
+            
+        default:
+            break
+        }
+        
         super.layoutSubviews()
     }
     
