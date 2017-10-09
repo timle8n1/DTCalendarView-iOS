@@ -210,10 +210,22 @@ public class DTCalendarView: UIView {
     /// Should the calendar scroll be paginated and always lock to the top of a month
     public var paginateMonths = true
     
+    /// The first day of the week should be a Monday
+    public var mondayShouldBeTheFirstDayOfTheWeek = false {
+        didSet {
+            weekdayLabels = mondayShouldBeTheFirstDayOfTheWeek ? DTCalendarView.mondayWeekdayLabels : DTCalendarView.defaultWeekdayLabels
+            setNeedsUpdate()
+        }
+    }
+    
     /// A delegate to provide required data to the calendar view and respond to user interaction with the calendar view
     public weak var delegate: DTCalendarViewDelegate?
     
-    fileprivate var weekdayLabels: [String] = ["S", "M", "T", "W", "T", "F", "S"]
+    /// Predefined Weekday Labels
+    private static var defaultWeekdayLabels = ["S", "M", "T", "W", "T", "F", "S"]
+    private static var mondayWeekdayLabels  = ["M", "T", "W", "T", "F", "S", "S"]
+    
+    fileprivate var weekdayLabels: [String] = DTCalendarView.defaultWeekdayLabels
     
     fileprivate var weekDisplayAttributes = WeekDisplayAttributes(normalDisplayAttributes: DisplayAttributes(font: UIFont.systemFont(ofSize: 15),
                                                                                                          textColor: .black,
@@ -537,6 +549,10 @@ extension DTCalendarView: UICollectionViewDataSource {
                 let range = calendar.range(of: .day, in: .month, for: date),
                 var weekday = calendar.dateComponents([.weekday], from: date).weekday {
                 
+                if mondayShouldBeTheFirstDayOfTheWeek {
+                    weekday = ((weekday + 5) % 7) + 1
+                }
+                
                 if weekday == 1 {
                     weekday = 8
                 }
@@ -589,6 +605,10 @@ extension DTCalendarView: UICollectionViewDataSource {
             if let date = calendar.date(byAdding: .month, value: indexPath.section, to: displayStartDate),
                 let weekViewCell = cell as? DTCalendarWeekCell,
                 var weekday = calendar.dateComponents([.weekday], from: date).weekday {
+                
+                if mondayShouldBeTheFirstDayOfTheWeek {
+                    weekday = ((weekday + 5) % 7) + 1
+                }
                     
                 if weekday == 1 {
                     weekday = 8
@@ -612,6 +632,7 @@ extension DTCalendarView: UICollectionViewDataSource {
                 weekViewCell.displayMonth = date
                 weekViewCell.displayWeek = displayWeek
                 weekViewCell.previewDaysInPreviousAndMonth = previewDaysInPreviousAndMonth
+                weekViewCell.mondayShouldBeTheFirstDayOfTheWeek = mondayShouldBeTheFirstDayOfTheWeek
                 
                 weekViewCell.disabledDays = delegate?.calendarView(self, disabledDaysInMonth: date)
                 
