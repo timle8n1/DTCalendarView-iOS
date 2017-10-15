@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [0.10.0- - 2017-10-15
+## [0.10.0] - 2017-10-15
 ### Adds
 - Adds mondayShouldBeTheFirstDayOfTheWeek
 - Makes setNeedsUpdate public to trigger calendar update externally
