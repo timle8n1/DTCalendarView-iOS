@@ -502,7 +502,11 @@ public class DTCalendarView: UIView {
     private var needsUpdate = false
     private var indexPathToScrollToAfterUpdate: IndexPath?
     private var animateScrollAfterUpdate = false
-    private func setNeedsUpdate() {
+    
+    /**
+     Triggers a calendar view update during the next update cycle.
+     */
+    public func setNeedsUpdate() {
         if !needsUpdate {
             needsUpdate = true
             DispatchQueue.main.async { [weak self] in
