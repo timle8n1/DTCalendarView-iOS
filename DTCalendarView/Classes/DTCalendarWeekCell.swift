@@ -26,6 +26,8 @@ class DTCalendarWeekCell: UICollectionViewCell {
     
     var previewDaysInPreviousAndMonth = true
     
+    var mondayShouldBeTheFirstDayOfTheWeek = false
+    
     weak var delegate: DTCalendarWeekCellDelegate?
     
     private var dayViews: [DTCalendarDayView] = [DTCalendarDayView(frame: .zero),
@@ -154,6 +156,11 @@ class DTCalendarWeekCell: UICollectionViewCell {
             if var weekday = wdComponents.weekday,
                 let range = range,
                 let previousMonthRange = previousMonthRange {
+                
+                if mondayShouldBeTheFirstDayOfTheWeek {
+                    weekday = ((weekday + 5) % 7) + 1
+                }
+                
                 if weekday == 1 {
                     weekday = 8
                 }
