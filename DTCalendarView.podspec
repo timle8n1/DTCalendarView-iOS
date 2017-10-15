@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DTCalendarView'
-  s.version          = '0.9.1'
+  s.version          = '0.10.0'
   s.summary          = 'A vertical scrolling calendar'
 
 # This description is used to generate tags and improve search results.
