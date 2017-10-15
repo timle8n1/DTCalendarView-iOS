@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.10.0- - 2017-10-15
+### Adds
+- Adds mondayShouldBeTheFirstDayOfTheWeek
+- Makes setNeedsUpdate public to trigger calendar update externally
+
 ## [0.9.1] - 2017-08-11
 ### Fixed
 - Issue scrolling to a given month after setting selected start date or end date
