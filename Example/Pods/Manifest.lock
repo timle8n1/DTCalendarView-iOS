@@ -1,5 +1,5 @@
 PODS:
-  - DTCalendarView (0.1.0)
+  - DTCalendarView (0.10.0)
 
 DEPENDENCIES:
   - DTCalendarView (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DTCalendarView: e210c76e9b366a5fb70273baae6e8a89e64c7e0f
+  DTCalendarView: 387f473706d45bf32d85c894d0598a8007cb778c
 
 PODFILE CHECKSUM: 9953c3d849afd122e3276443acee806b56bc90ce
 
-COCOAPODS: 1.2.1
+COCOAPODS: 1.5.0

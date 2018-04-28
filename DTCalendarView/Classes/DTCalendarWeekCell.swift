@@ -110,7 +110,7 @@ class DTCalendarWeekCell: UICollectionViewCell {
         }
     }
     
-    func dayViewTapped(_ tapGR: UITapGestureRecognizer) {
+    @objc func dayViewTapped(_ tapGR: UITapGestureRecognizer) {
         
         if let dayLabel = tapGR.view as? DTCalendarDayView,
             tapGR.state == .recognized {

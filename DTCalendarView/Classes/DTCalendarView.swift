@@ -455,7 +455,7 @@ public class DTCalendarView: UIView {
         collectionView.addGestureRecognizer(datePanGR!)
     }
     
-    func viewPanned(_ panGR: UIPanGestureRecognizer) {
+    @objc func viewPanned(_ panGR: UIPanGestureRecognizer) {
         
         let point = panGR.location(in: collectionView)
         
